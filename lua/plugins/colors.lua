@@ -4,9 +4,11 @@ end
 
 return {
     {
-	"folke/tokyonight.nvim",
+	-- "folke/tokyonight.nvim",
+	"ellisonleao/gruvbox.nvim",
 	config = function()
-	    vim.cmd.colorscheme "tokyonight"
+	    --vim.cmd.colorscheme "tokyonight"
+	    vim.cmd.colorscheme "gruvbox"
 	    enable_transparency()
 	end
     },
