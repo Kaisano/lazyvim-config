@@ -1,39 +1,23 @@
 vim.diagnostic.config({
-    virtual_text  = true,
-    severity_sort = true,
-    float         = {
+  virtual_text  = true,
+  severity_sort = true,
+  float         = {
 
-        style  = 'minimal',
-        border = 'rounded',
-        source = 'if_many',
-        header = '',
-        prefix = '',
+    style  = 'minimal',
+    border = 'rounded',
+    source = 'if_many',
+    header = '',
+    prefix = '',
+  },
+  signs         = {
+    text = {
+
+      [vim.diagnostic.severity.ERROR] = '✘',
+      [vim.diagnostic.severity.WARN]  = '▲',
+      [vim.diagnostic.severity.HINT]  = '⚑',
+      [vim.diagnostic.severity.INFO]  = '»',
     },
-    signs         = {
-        text = {
-
-            [vim.diagnostic.severity.ERROR] = '✘',
-            [vim.diagnostic.severity.WARN]  = '▲',
-            [vim.diagnostic.severity.HINT]  = '⚑',
-            [vim.diagnostic.severity.INFO]  = '»',
-        },
-    },
-})
-
--- Works best with completeopt=noselect.
--- Use CTRL-Y to select an item. |complete_CTRL-Y|
-vim.cmd[[set completeopt+=menuone,noselect,popup]]
-vim.lsp.start({
-  name = 'pyright',
-  cmd = { 'pyright-langserver', '--stdio' },
-  on_attach = function(client, bufnr)
-    vim.lsp.completion.enable(true, client.id, bufnr, {
-      autotrigger = true,
-      convert = function(item)
-	return { abbr = item.label:gsub('%b()', '') }
-      end,
-    })
-  end,
+  },
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -62,12 +46,49 @@ vim.api.nvim_create_autocmd('LspAttach', {
       and not excluded_filetypes[vim.bo[buf].filetype]
     then
       vim.api.nvim_create_autocmd('BufWritePre', {
-	group = vim.api.nvim_create_augroup('my.lsp.format', { clear = false }),
-	buffer = buf,
-	callback = function()
-	  vim.lsp.buf.format({ bufnr = buf, id = client.id, timeout_ms = 1000 })
-	end,
+        group = vim.api.nvim_create_augroup('my.lsp.format', { clear = false }),
+        buffer = buf,
+        callback = function()
+          vim.lsp.buf.format({ bufnr = buf, id = client.id, timeout_ms = 1000 })
+        end,
       })
     end
   end,
 })
+
+---vim.cmd[[set completeopt+=menuone,noselect,popup]]
+---vim.lsp.start({
+---  name = 'arduino',
+---  cmd = {
+---    'arduino-language-server.exe',
+---    '-clangd', 'clangd-20.exe',
+---    '-cli-config', vim.fn.expand('~\\AppData\\Local\\Arduino15\\arduino-cli.yaml'),
+---    '-cli', 'arduino-cli.exe'
+---  },
+---  on_attach = function(client, bufnr)
+---    vim.lsp.completion.enable(true, client.id, bufnr, {
+---      autotrigger = true,
+---      convert = function(item)
+---        return { abbr = item.label:gsub('%b()', '') }
+---      end,
+---    })
+---  end,
+---})
+
+-- Works best with completeopt=noselect.
+-- Use CTRL-Y to select an item. |complete_CTRL-Y|
+vim.cmd[[set completeopt+=menuone,noselect,popup]]
+vim.lsp.start({
+  name = 'pyright',
+  cmd = { 'pyright-langserver', '--stdio' },
+  on_attach = function(client, bufnr)
+    vim.lsp.completion.enable(true, client.id, bufnr, {
+      autotrigger = true,
+      convert = function(item)
+        return { abbr = item.label:gsub('%b()', '') }
+      end,
+    })
+  end,
+})
+
+vim.lsp.log.set_level(vim.lsp.log.levels.WARN)

@@ -72,14 +72,20 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  filetypes = { 'arduino' },
+  filetypes = { 'arduino', 'cpp', 'c' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
-    on_dir(util.root_pattern('*.ino')(fname))
+    local root = vim.fs.dirname(
+      vim.fs.find({ '*.ino', '*.cpp', 'sketch.yaml' }, { path = fname, upward = true })[1]
+    )
+    on_dir(root)
+    --on_dir(util.root_pattern('*.ino')(fname))
   end,
   cmd = {
-    'arduino-language-server',
-    '-clangd', 'clangd-20'
+    'arduino-language-server.exe',
+    '-clangd', 'clangd-20.exe',
+    '-cli-config', vim.fn.expand('~\\AppData\\Local\\Arduino15\\arduino-cli.yaml'),
+    '-cli', 'arduino-cli.exe'
   },
   capabilities = {
     textDocument = {

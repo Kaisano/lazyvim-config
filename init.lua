@@ -5,3 +5,5 @@ require("config.lsp")
 
 vim.lsp.enable('pyright')
 vim.lsp.enable('arduino')
+vim.lsp.enable('rust_glancer')
+-- vim.lsp.enable('clangd')

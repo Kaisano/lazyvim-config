@@ -12,8 +12,6 @@ return {
 		"lua",
 		"c",
 		"python",
-		"toml",
-		"yaml",
 	    },
 	    auto_install = false,
 	})
